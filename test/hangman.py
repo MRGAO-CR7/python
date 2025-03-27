@@ -1,7 +1,7 @@
 import random
 
 word_categories = {
-    'Science': [
+    'science': [
         'Velocity',
         'Momentum',
         'Force',
@@ -10,7 +10,7 @@ word_categories = {
         'Trajectory',
         'Projectile'
     ],
-    'Maths': [
+    'maths': [
         'Sum',
         'Addition',
         'Multiplication',
@@ -19,7 +19,7 @@ word_categories = {
         'Exponents',
         'Integers'
     ],
-    'Tech': [
+    'tech': [
         'Control',
         'Loop',
         'Iteration',
@@ -39,7 +39,7 @@ def main():
 
     chosen_category = get_chosen_category()
     
-    selected_word = random.choice(word_categories[chosen_category])
+    selected_word = random.choice(word_categories[chosen_category.lower()])
     length_word = len(selected_word)
     word_underscores = ['_'] * length_word
 
@@ -62,11 +62,11 @@ def main():
         
         guessed_letters.append(guess)
 
-        if guess in selected_word:
+        if guess.lower() in selected_word.lower():
             new_state = list(word_underscores)
-            indices = [i for i, letter in enumerate(selected_word) if letter == guess]
+            indices = [i for i, letter in enumerate(selected_word) if letter.lower() == guess.lower()]
             for i in indices:
-                new_state[i] = guess
+                new_state[i] = selected_word[i]
 
             word_underscores = new_state
             print()
@@ -74,7 +74,7 @@ def main():
         else:
             incorrect_guesses += 1
             print(f'\nIncorrect guesses remaining: {AmountOfTempts - incorrect_guesses}')
-            draw_tree(incorrect_guesses)
+            draw_hangman(incorrect_guesses)
 
             state = word_underscores
             print()
@@ -102,10 +102,10 @@ def get_name():
 def willing_check():
     while True:
         willing_to_play = input('\nAre you willing to play Hangman? (y/n): ')
-        if willing_to_play == 'n':
+        if willing_to_play in ['n', 'no']:
             print('Maybe next time!')
             exit()
-        elif willing_to_play == 'y':
+        elif willing_to_play == '' or willing_to_play in ['y', 'yes']:
             print('Great!')
             break
         else:
@@ -128,7 +128,7 @@ def familiar_with_game_check():
 def get_chosen_category():
     while True:
         chosen_category = input('\nPlease input the category you would like to play, (Science, Maths, Tech): ')
-        if chosen_category in word_categories:
+        if chosen_category.lower() in word_categories:
             break
         else:
             print('That is not a category in the list, please input a proper one. ')
@@ -136,47 +136,41 @@ def get_chosen_category():
     return chosen_category
 
 
-def draw_tree(times):
-    if times <= 3:
-        draw_repeat_part(times)
+def draw_hangman(times):
+    if times <= 0:
+        return
 
-    if times == 4:
-        print('  || = =')
-        print('  |  /')
-        print('  |/')
-        print('  ||')
-        draw_repeat_part(3)
+    if times >= 6:
+        print('   +----+')
+        print('   |    |')
+        print('   |    |')
+        print('   O    |')
 
-    if times == 5:
-        print('  || = = = = = = = = = = = = = =')
-        print('  |  /')
-        print('  |/')
-        print('  ||')
-        draw_repeat_part(3)
-    
-    if times == 6:
-        print('  || = = = = = = = = = = = = = =')
-        print('  |  /                 |')
-        print('  |/                   |')
-        print('  ||                 {$ $}')
-        draw_repeat_part(3)
+    if times >= 7:
+        print('  /|\\   |')
+        print('  / \\   |')
 
-    if times == 7:
-        print('  || = = = = = = = = = = = = = =')
-        print('  |  /                 |')
-        print('  |/                   |')
-        print('  ||                 {$ $}')
-        print('  ||               /{  :  }\\')
-        print('  ||                  |||')
-        print('  ||                 <===>')
-        draw_repeat_part(2)
+    if times >= 5 and times not in [6, 7]:
+        print('   +----+')
+        print('        |')
 
-    print()
+    if times >= 4 and times not in [5, 6, 7]:
+        print('        +')
+        print('        |')
 
-def draw_repeat_part(times):
-    for i in range(times):
-        print('  ||')
-        print('  ||')
-        print('  ||')
+    if times >= 3 and times != 7:
+        print('        |')
+        print('        |')
+
+    if times >= 2:
+        print('        |')
+        print('        |')
+
+    if times >= 1:
+        print('        |')
+        print('        |')
+
+    print(' ===========')
+
 
 main()
