@@ -20,13 +20,13 @@ word_categories = {
         'Integers'
     ],
     'tech': [
-        'Control',
-        'Loop',
-        'Iteration',
-        'Data Types',
-        'Input',
-        'Output',
-        'Operators'
+        'Control Panel Test',
+        'Loop Loop Test',
+        'Iteration Test Test',
+        'Data Types Test',
+        'Input and Output',
+        'Output Stream Test',
+        'Operators and Expressions'
     ],
 }
 
@@ -49,12 +49,19 @@ def main():
 
     print(f'You have chosen: {chosen_category}. The random word chosen has {len(selected_word)} letters.')
 
+    idxs = [i for i, letter in enumerate(selected_word) if letter == ' ']
+    for i in idxs:
+        word_underscores[i] = ' '
+
     state = word_underscores
     print()
     print(' '.join(state))
 
     while incorrect_guesses < AmountOfTempts and '_' in word_underscores:
         guess = input('\nGuess a letter: ')
+        if not guess.isalpha() or len(guess) != 1:
+            print('That is not a valid input, please retry again using one letter only.')
+            continue
 
         if guess in guessed_letters:
             print('You have already guessed this letter. Try another one.')
